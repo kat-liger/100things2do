@@ -5,7 +5,6 @@ define(
         var CardsView = Parse.View.extend({
             el: $("#cards"),
 
-
             initialize: function () {
                 this.collection = new Cards;
                 this.collection.query = new Parse.Query("Cards");

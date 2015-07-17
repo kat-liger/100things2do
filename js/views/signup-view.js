@@ -1,8 +1,8 @@
 define(
 
-    ['jquery', 'lodash', 'parse', 'views/cards-view'],
+    ['jquery', 'lodash', 'parse', 'views/cards-view','text!templates/signup-template.html'],
 
-    function($,_,Parse,CardsView) {
+    function($,_,Parse,CardsView, SignupTemplate) {
 
         var SignupView = Parse.View.extend({
 
@@ -26,9 +26,8 @@ define(
 
                 Parse.User.signUp(username, password, { ACL: new Parse.ACL() }, {
                     success: function(user) {
-                        new CardsView();
-                        alert('This worked!');
-                        //replace content of .hide-on-med-and-down with "<li>You are logged on as</li>"
+                        self.cancel();
+                        new ManageCardsView();
                         self.undelegateEvents();
                         delete self;
                     },
@@ -45,7 +44,8 @@ define(
             },
 
             render: function() {
-                this.$el.append(_.template($("#signup-template").html()));
+                //this.$el.append(_.template($("#signup-template").html()));
+                this.$el.append(_.template( SignupTemplate ));
                 this.$el.find(".modal").openModal();
                 this.delegateEvents();
             },

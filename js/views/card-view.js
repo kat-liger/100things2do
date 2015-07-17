@@ -1,20 +1,21 @@
 define(
 
-    ['jquery', 'lodash', 'parse'],
+    ['jquery', 'lodash', 'parse', 'text!templates/card-template.html'],
 
-    function($, _, Parse) {
+    function($, _, Parse, CardTemplate) {
 
         var CardView = Parse.View.extend({
             tagName: "article",
             //className: "card-container",
-            template: $("#cardTemplate").html(),
+            //template: $("#cardTemplate").html(),
 
             render: function () {
-                var tmpl = _.template(this.template);
+                var tmpl = _.template( CardTemplate );
 
                 $(this.el).html(tmpl(this.model.toJSON()));
                 return this;
             }
+
         });
     return CardView;
     });

@@ -1,8 +1,8 @@
 define(
 
-    ['jquery', 'lodash', 'parse', 'views/cards-view'],
+    ['jquery', 'lodash', 'parse', 'views/cards-view','views/manage-cards-view','text!templates/login-template.html'],
 
-    function($,_,Parse,CardsView) {
+    function($,_,Parse,CardsView, ManageCardsView, LoginTemplate) {
 
         var LoginView = Parse.View.extend({
 
@@ -25,12 +25,13 @@ define(
                 var password = this.$("#login-password").val();
 
                 Parse.User.logIn(username, password, {
+
                     success: function(user) {
-                        new CardsView();
-                        alert('You are logged in!');
-                        $( "div.hide-on-med-and-down" ).html("<li>You are logged in</li>");
+                        self.cancel();
+                        new ManageCardsView();
                         self.undelegateEvents();
                         delete self;
+
                     },
 
                     error: function(user, error) {
@@ -45,7 +46,8 @@ define(
             },
 
             render: function() {
-               this.$el.append(_.template($("#login-template").html()));
+               //this.$el.append(_.template($("#login-template").html()));
+               this.$el.append(_.template( LoginTemplate ));
                this.$el.find(".modal").openModal();
                this.delegateEvents();
             },

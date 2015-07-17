@@ -104,11 +104,47 @@ footer.page-footer {
     width: 500px;
 }
 
-#signup-card h2, #signup-card a, #login-card h2, #login-card a {
+#signup-card h2, #signup-card a, #login-card h2, #login-card a, #signup-card h4, #login-card h4 {
     color: teal;
 }
 
 #signup-card input, #login-card input {
     color: black;
     font-size: larger;
+}
+
+
+nav ul a {
+    display: inline;
+}
+
+.filters .tabs .tab a {
+    background-color: #fafafa;
+}
+
+a.log-out:hover {
+    color: #ee6e73;
+}
+
+span.username {
+    color: #f9c9cb;
+    font-weight: bold;
+}
+
+ span.like {
+     font-size: 24px;
+     display: inline;
+     margin-right: 10px;
+     color: cadetblue;
+     line-height: 1;
+     box-sizing: inherit;
+     vertical-align: top;
+  }
+
+.card .card-action a {
+    margin-right: 0px;
+}
+
+nav ul li.user-info:hover, nav ul li.user-info.active {
+   background-color: #4db6ac;
 }

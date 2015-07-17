@@ -1,8 +1,10 @@
 require(
     ['jquery', 'lodash', 'json2', 'parse', 'materialize', 'views/card-view', 'views/cards-view',
-        'models/card-collection', 'models/card-model','views/signup-view','views/login-view'],
+        'models/card-collection', 'models/card-model','views/signup-view','views/login-view',
+        'views/manage-cards-view', 'text!templates/userinfo-template.html'],
     function($, _, json2, Parse, Materialize, CardView, CardsView,
-         Cards, Card, SignupView, LoginView) {
+         Cards, Card, SignupView, LoginView,
+         ManageCardsView, UserinfoTemplate) {
 
         Parse.$ = $;
         Parse.initialize("5jqnBuG8MWb2et9PNWXmTPE3gqVJeRdfVpQrf4JL", "kvJEstj10MpNCKVQUCPs2ftMZJ2x7zLhX6VLZ0GY");
@@ -18,7 +20,9 @@ require(
 
             events: {
                 'click .signup-trigger': 'signUp',
-                'click .login-trigger': 'login'
+                'click .login-trigger': 'login',
+                'click .log-out': 'logOut',
+                'click a.like': 'like'
             },
 
             initialize: function() {
@@ -27,10 +31,8 @@ require(
 
             render: function() {
                 if (Parse.User.current()) {
-                    //manage cards view
-                    this.$el.find("div.hide-on-med-and-down").html("<li>You are logged in</li>");
-                    alert('you are logged in!');
-                    new CardsView;
+                    new ManageCardsView;
+                    this.$('.hide-on-med-and-down').html(_.template( UserinfoTemplate ));
                 } else {
                     new CardsView;
                 }
@@ -42,6 +44,22 @@ require(
 
             login: function() {
                 new LoginView;
+            },
+
+            logOut: function() {
+                //ManageCardsView.logOut;
+                Parse.User.logOut();
+                new CardsView();
+                this.undelegateEvents();
+                delete this;
+            },
+
+            like: function() {
+                if (Parse.User.current()) {
+                    console.log("like added!");
+                } else {
+                   this.login();
+                }
             }
         });
 
