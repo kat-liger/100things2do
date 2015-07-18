@@ -1,8 +1,8 @@
 define(
 
-    ['jquery', 'lodash', 'parse', 'views/cards-view','text!templates/signup-template.html'],
+    ['jquery', 'lodash', 'parse', 'views/cards-view','views/manage-cards-view','text!templates/signup-template.html'],
 
-    function($,_,Parse,CardsView, SignupTemplate) {
+    function($,_,Parse,CardsView, ManageCardsView, SignupTemplate) {
 
         var SignupView = Parse.View.extend({
 
@@ -11,7 +11,8 @@ define(
             events: {
                 'click .cancel-button': 'cancel',
                 'click .signup-button': 'signUp',
-                'submit form.signup-form': 'signUp'
+                'submit form.signup-form': 'signUp',
+                'keypress #signup-password': 'signupOnEnter'
             },
 
             initialize: function() {
@@ -27,7 +28,7 @@ define(
                 Parse.User.signUp(username, password, { ACL: new Parse.ACL() }, {
                     success: function(user) {
                         self.cancel();
-                        new ManageCardsView();
+                        self.trigger("signupSuccess");
                         self.undelegateEvents();
                         delete self;
                     },
@@ -53,7 +54,16 @@ define(
             //function to go back to Home Page
             cancel: function() {
                 this.$el.find(".modal").closeModal();
+            },
+
+            //function to signup on Enter
+            signupOnEnter: function(e) {
+                var self = this;
+                if (e.keyCode == 13) {
+                    self.signUp();
+                }
             }
+
         });
 
         return SignupView;

@@ -11,7 +11,8 @@ define(
             events: {
                 'click .cancel-button': 'cancel',
                 'click .login-button': 'logIn',
-                'submit form.login-form': 'logIn'
+                'submit form.login-form': 'logIn',
+                'keypress #login-password': 'loginOnEnter'
             },
 
             initialize: function() {
@@ -28,7 +29,7 @@ define(
 
                     success: function(user) {
                         self.cancel();
-                        new ManageCardsView();
+                        self.trigger("loginSuccess");
                         self.undelegateEvents();
                         delete self;
 
@@ -55,6 +56,14 @@ define(
             //function to go back to Home Page
             cancel: function() {
                 this.$el.find(".modal").closeModal();
+            },
+
+            //function to logIn on Enter
+            loginOnEnter: function(e) {
+                var self = this;
+                if (e.keyCode == 13) {
+                    self.logIn();
+                }
             }
 
         });

@@ -5,7 +5,7 @@ define(
     function($, _, Parse, CardTemplate) {
 
         var CardView = Parse.View.extend({
-            tagName: "article",
+            //tagName: "article",
             //className: "card-container",
             //template: $("#cardTemplate").html(),
 

@@ -5,13 +5,14 @@ define(
              CardsView, FiltersTemplate) {
 
         var ManageCardsView = Parse.View.extend({
-            el: $(".container"),
+            el: $(".section"),
 
             events: {
-                'click .log-out': 'logOut'
+               // 'click .log-out': 'logOut'
             },
 
             initialize: function () {
+
                 this.collection = new Cards;
                 this.collection.query = new Parse.Query("Cards");
                 var thisView = this;
@@ -24,9 +25,14 @@ define(
             },
 
             render: function () {
+                //emptying container
+                this.$el.find("#cards").empty();
+                //this.$el.find(".section").html("<h1>Now you can manage!</h1>");
+                console.log("Now we are in manage view");
+
+
                 //adding the tabs
-                //this.$el.find(".section").prepend(_.template($("#filters-template").html()));
-                this.$el.find(".section").prepend(_.template(FiltersTemplate));
+                this.$el.find(".section").append(_.template(FiltersTemplate));
                 var that = this;
                 var count = 0;
                 _.each(this.collection.models, function (item) {
@@ -39,7 +45,8 @@ define(
                     count += 1;
 
                 }, this);
-                //this.$('.hide-on-med-and-down').html(_.template($("#userinfo-template").html()));
+
+
 
             },
 
@@ -48,14 +55,17 @@ define(
                     model: item
                 });
                 this.$el.find("#cards").append(cardView.render().el);
-            },
-
-            logOut: function(e) {
-                Parse.User.logOut();
-                this.undelegateEvents();
-                delete this;
-                new CardsView();
             }
+
+           // logOut: function(e) {
+                //Parse.User.logOut();
+                //this.trigger("logoutSuccess");
+                //this.undelegateEvents();
+                //delete this;
+                //new CardsView();
+          //  }
+
+
         });
 
         return ManageCardsView;
