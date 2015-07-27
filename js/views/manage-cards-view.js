@@ -27,12 +27,9 @@ define(
             render: function () {
                 //emptying container
                 this.$el.find("#cards").empty();
-                //this.$el.find(".section").html("<h1>Now you can manage!</h1>");
-                console.log("Now we are in manage view");
-
 
                 //adding the tabs
-                this.$el.find(".section").append(_.template(FiltersTemplate));
+                this.$el.prepend(_.template(FiltersTemplate));
                 var that = this;
                 var count = 0;
                 _.each(this.collection.models, function (item) {

@@ -17,6 +17,7 @@ require(
             // Instead of generating a new element, bind to the existing skeleton of
             // the App already present in the HTML.
             el: "body",
+            manageCardsView: null,
 
             events: {
                 'click .signup-trigger': 'signUp',
@@ -27,15 +28,14 @@ require(
 
             initialize: function() {
                 this.render();
+
             },
 
             render: function() {
 
                 if (Parse.User.current()) {
-                    var manageCardsView = new ManageCardsView;
+                    this.manageCardsView = new ManageCardsView;
                     this.$('.hide-on-med-and-down').html(_.template( UserinfoTemplate ));
-                    //this.$el.find("#cards").html("<h1>Main view says that you can manage!</h1>");
-                    //manageCardsView.on("logoutSuccess", this.logOut());
 
                 } else {
 
@@ -61,21 +61,84 @@ require(
 
             },
 
-            like: function() {
+            like: function(e) {
                 if (Parse.User.current()) {
-                    console.log("like added!");
+                    e.preventDefault();
+                    var cardId = $(e.target).parents(".card").attr("data-id");
+                    this.updateLike(cardId);
+
                 } else {
+
                    this.login();
+
                 }
             },
 
             logOut: function(e) {
                 Parse.User.logOut();
-                this.$('.hide-on-med-and-down').html(_.template( LoginSignupTemplate ));
+                this.$el.find(".filters").remove();
                 this.$el.find("#cards").empty();
+                this.$('.hide-on-med-and-down').html(_.template( LoginSignupTemplate ));
                 //this.undelegateEvents();
-             //   delete this;
+                // delete this;
                 this.render();
+            },
+
+            updateLike: function(cardId) {
+                var that = this;
+
+                var Likes = Parse.Object.extend("Likes");
+                var likes = new Likes();
+                //we need to check collection for the row where cardId = cardId and userId = Parse.User.current().id
+                //and only if it doesn't exist we should run the following
+                var likeQuery = new Parse.Query(Likes);
+                likeQuery.equalTo("cardId", cardId);
+                likeQuery.equalTo("userId", Parse.User.current().id);
+
+                likeQuery.find({
+                    success: function(results) {
+                        if (results.length > 0) {
+                            //remove results from cloud
+                            _.each(results, function(result) {
+                                result.destroy();
+                            });
+                            that.removeLike(likes, cardId, that);
+                        } else {
+                            //add row to Likes
+                            that.addLike(likes,cardId,that);
+                        }
+
+                    },
+                    error: function(error) {
+                        console.log("Error: " + error.code + " " + error.message);
+                    }
+                });
+
+            },
+
+            addLike: function(likes, cardId, scope) {
+
+                console.log("user with ID "+Parse.User.current().id+" liked the card with ID "+cardId);
+                likes.save({
+                    cardId: cardId,
+                    userId: Parse.User.current().id,
+                    ACL: new Parse.ACL(Parse.User.current())
+                }).then(function () {
+                    //console.log("user with ID"+Parse.User.current().id+" liked the card with ID"+cardId);
+                    //if the like was saved then increase the liked attribute of the card in Cards table
+                    //var cardQuery = new Parse.Query("Cards");
+                    //cardQuery.equalTo("objectId", cardId);
+                    var thisCard = scope.manageCardsView.collection.get(cardId);
+                    thisCard.increment("liked", 1);
+                    thisCard.save();
+                });
+            },
+
+            removeLike: function(likes, cardId, scope) {
+                console.log("user with ID "+Parse.User.current().id+" unliked the card with ID "+cardId);
+                var thisCard = scope.manageCardsView.collection.get(cardId);
+                thisCard.increment("liked", -1);
+                thisCard.save();
             }
 
         });

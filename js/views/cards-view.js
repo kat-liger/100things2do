@@ -21,7 +21,7 @@ define(
             },
 
             render: function () {
-                console.log("Now we are in cards view");
+
                 var that = this;
                 var count = 0;
                 _.each(this.collection.models, function (item) {
