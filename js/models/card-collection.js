@@ -5,7 +5,12 @@ define(
     function($,_,Parse,Card) {
 
     Cards = Parse.Collection.extend({
-        model: Card
+        model: Card,
+
+        comparator: function(card) {
+            return -card.get('liked');
+        }
+
     });
 
     return Cards;

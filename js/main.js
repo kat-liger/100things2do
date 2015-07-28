@@ -118,7 +118,7 @@ require(
 
             addLike: function(likes, cardId, scope) {
 
-                console.log("user with ID "+Parse.User.current().id+" liked the card with ID "+cardId);
+                //console.log("user with ID "+Parse.User.current().id+" liked the card with ID "+cardId);
                 likes.save({
                     cardId: cardId,
                     userId: Parse.User.current().id,
@@ -135,7 +135,7 @@ require(
             },
 
             removeLike: function(likes, cardId, scope) {
-                console.log("user with ID "+Parse.User.current().id+" unliked the card with ID "+cardId);
+                //console.log("user with ID "+Parse.User.current().id+" unliked the card with ID "+cardId);
                 var thisCard = scope.manageCardsView.collection.get(cardId);
                 thisCard.increment("liked", -1);
                 thisCard.save();
@@ -150,6 +150,8 @@ require(
             }
         });
 
+        var state = new AppState();
+
         var AppRouter = Parse.Router.extend({
             routes: {
                 "": "index",
@@ -162,22 +164,22 @@ require(
             },
 
             all: function() {
-                //state.set({ filter: "all" });
+                //state.set({ filter: "all" })
                 console.log("you navigated to all");
-            }
-
-/*            active: function() {
-                state.set({ filter: "active" });
             },
 
-            completed: function() {
-                state.set({ filter: "completed" });
-            }*/
+            authored: function() {
+                //state.set({ filter: "authored" });
+            },
+
+            liked: function() {
+                //state.set({ filter: "liked" });
+            }
         });
 
-        var state = new AppState;
 
-        new AppRouter;
+
+        new AppRouter();
 
 
         //create instance of master view
