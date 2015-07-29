@@ -4,11 +4,11 @@
             <img class='center-cropped' src='<%= url %>' alt=""/>
         </div>
         <div class='card-content'><p><%= description %></p>
-            <div class='posted-by'><BR>Posted by <a href='#'><%= author %></a></div>
+            <div class='posted-by'><BR>Posted by <a href='#' class="byAuthor"><%= author %></a></div>
         </div>
         <div class='card-action'><a href='#' class="like"><i class='material-icons'>favorite</i></a><span class="like"><%= liked %></span>
-            <a href='#'><i class='material-icons'>share</i></a>
-            <a class='right'>Comment (<%= comments %>)</a>
+            <a href='#'><i class='material-icons white-text'>share</i></a>
+            <a href='#' class='right remove-card white-text'>Remove</a>
         </div>
     </div>
 </div>

@@ -4,7 +4,8 @@ define(
 
         var Card = Parse.Object.extend('Card',{
             defaults: {
-                liked: 0
+                liked: 0,
+                comments: 0
             }
         });
 

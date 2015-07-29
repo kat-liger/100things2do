@@ -104,11 +104,14 @@ footer.page-footer {
     width: 500px;
 }
 
-#signup-card h2, #signup-card a, #login-card h2, #login-card a, #signup-card h4, #login-card h4 {
+#signup-card h2, #signup-card a,
+#login-card h2, #login-card a,
+#signup-card h4, #login-card h4,
+#create-card h2, #create-card a {
     color: teal;
 }
 
-#signup-card input, #login-card input {
+#signup-card input, #login-card input, #create-card input, #create-card textarea {
     color: black;
     font-size: larger;
 }

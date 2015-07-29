@@ -24,6 +24,7 @@ require(
                 'click .login-trigger': 'login',
                 'click .log-out': 'logOut',
                 'click a.like': 'like'
+
             },
 
             initialize: function() {
@@ -74,11 +75,14 @@ require(
                 }
             },
 
+
             logOut: function(e) {
                 Parse.User.logOut();
                 this.$el.find(".filters").remove();
+                this.$el.find(".fixed-action-btn").remove();
                 this.$el.find("#cards").empty();
                 this.$('.hide-on-med-and-down').html(_.template( LoginSignupTemplate ));
+
                 //this.undelegateEvents();
                 // delete this;
                 this.render();

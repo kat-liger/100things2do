@@ -9,6 +9,7 @@ define(
             //className: "card-container",
             //template: $("#cardTemplate").html(),
 
+
             initialize: function() {
                 //this.on('change:liked', this.render);
                 this.model.on("change", this.onChange, this);
@@ -25,6 +26,9 @@ define(
             onChange: function() {
                 this.render();
             }
+
+
+
 
         });
     return CardView;

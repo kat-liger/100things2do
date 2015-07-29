@@ -1,8 +1,8 @@
 define(
     ['jquery','lodash','parse','models/card-collection','views/card-view',
-        'views/cards-view', 'text!templates/filters-template.html'],
+        'views/cards-view', 'text!templates/filters-template.html', 'views/create-view'],
     function($,_,Parse,Cards,CardView,
-             CardsView, FiltersTemplate) {
+             CardsView, FiltersTemplate, CreateView) {
 
 
 
@@ -14,7 +14,11 @@ define(
 
                "click .liked": 'showLiked',
                "click .all": 'showAll',
-               "click .authored": 'showAuthored'
+               "click .authored": 'showAuthored',
+               "click .byAuthor": 'filterByAuthor',
+               "click .create-card": 'createCard',
+               "click .remove-card": 'removeCard'
+
             },
 
             initialize: function () {
@@ -30,6 +34,7 @@ define(
                     }
                 });
 
+                this.$el.append("<div class='fixed-action-btn' style='bottom: 45px; right: 24px;'><a class='create-card btn-floating btn-large red'><i class='material-icons'>add</i></a></div>");
 
 
             },
@@ -86,6 +91,17 @@ define(
                     }
                 }, this);
                 this.render(myCardsCollection);
+                $(".remove-card").removeClass("white-text");
+
+            },
+
+            createCard: function() {
+                var createView = new CreateView();
+                var that = this;
+                createView.on("createSuccess",function() {
+                    that.render();
+                });
+
             },
 
             loadLikes: function(cardsCollection) {
@@ -108,7 +124,28 @@ define(
                     }
                 });
 
+            },
+
+            filterByAuthor: function(e) {
+                e.preventDefault();
+                var cardAuthor = $(e.target).text();
+                //emptying container
+                this.$el.find(".filters").remove();
+                //create collection with cards created by this user
+                var myCardsCollection = new Cards();
+                _.each(this.collection.models, function (item) {
+                    if (item.get("author") === cardAuthor) {
+                        myCardsCollection.add(item);
+                    }
+                }, this);
+                this.render(myCardsCollection);
+            },
+
+            removeCard: function() {
+                console.log("This card will be removed"+this.toJSON);
+                //this.destroy();
             }
+
         });
 
         return ManageCardsView;
