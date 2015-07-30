@@ -60,7 +60,10 @@ define(
 
             //function to go back to Home Page
             cancel: function() {
+
                 this.$el.find(".modal").closeModal();
+                this.remove();
+
             }
 
         });

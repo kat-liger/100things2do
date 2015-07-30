@@ -16,8 +16,7 @@ define(
                "click .all": 'showAll',
                "click .authored": 'showAuthored',
                "click .byAuthor": 'filterByAuthor',
-               "click .create-card": 'createCard',
-               "click .remove-card": 'removeCard'
+               "click .create-card": 'createCard'
 
             },
 
@@ -35,6 +34,7 @@ define(
                 });
 
                 this.$el.append("<div class='fixed-action-btn' style='bottom: 45px; right: 24px;'><a class='create-card btn-floating btn-large red'><i class='material-icons'>add</i></a></div>");
+               //this.collection.on('remove', this.render(this.collection));
 
 
             },
@@ -66,6 +66,11 @@ define(
                     model: item
                 });
                 this.$el.find("#cards").append(cardView.render().el);
+
+                var that = this;
+                cardView.on("destroySuccess",function() {
+                    that.render();
+                });
             },
 
             showAll: function() {
@@ -91,15 +96,16 @@ define(
                     }
                 }, this);
                 this.render(myCardsCollection);
-                $(".remove-card").removeClass("white-text");
+                $(".remove-card").removeClass("white-text no-cursor");
 
             },
 
             createCard: function() {
-                var createView = new CreateView();
+                var createView = new CreateView;
                 var that = this;
                 createView.on("createSuccess",function() {
-                    that.render();
+                    console.log("we are inside listener function");
+                    that.showAll();
                 });
 
             },
@@ -139,11 +145,6 @@ define(
                     }
                 }, this);
                 this.render(myCardsCollection);
-            },
-
-            removeCard: function() {
-                console.log("This card will be removed"+this.toJSON);
-                //this.destroy();
             }
 
         });
