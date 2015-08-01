@@ -1,12 +1,12 @@
 define(
 
-    ['jquery', 'lodash', 'parse', 'views/cards-view','text!templates/create-template.html', 'models/card-collection'],
+    ['jquery', 'lodash', 'parse', 'text!templates/create-template.html'],
 
-    function($,_,Parse,CardsView, CreateTemplate, Cards) {
+    function($,_,Parse,CreateTemplate) {
 
         var CreateView = Parse.View.extend({
 
-            el: "#cards",
+            el: "#create-div",
 
             events: {
                 'click .cancel-button': 'cancel',
@@ -17,9 +17,10 @@ define(
             initialize: function() {
                 //_.bindAll(this, "createCard");
                 this.render();
+                console.log("CreateView initialized");
             },
 
-            createCard: function(e) {
+            createCard: function() {
                 var url = this.$("#image-url").val();
                 var description = this.$("#create-textarea").val();
 
@@ -28,31 +29,35 @@ define(
                 var acl = new Parse.ACL();
                 acl.setPublicReadAccess(true);
                 acl.setWriteAccess(Parse.User.current().id, true);
-
-                var Collection = Parse.Object.extend("Cards");
-                var collection = new Collection();
-                collection.save({
+                var that = this;
+                var Card = Parse.Object.extend("Cards");
+                var card  = new Card({
                     url: url,
                     description: description,
                     author: Parse.User.current().get("username"),
                     liked: 0,
                     ACL: acl
-                }, {
-                    success: function(collection) {
-                        // The object was saved successfully.
+                });
+
+                card.save(null, {
+                    success: function(newCard) {
+                        that.$el.find(".modal").closeModal();
+                        that.trigger("createSuccess", newCard);
+                        //console.log("user with name "+ Parse.User.current().get("username")+" and ACL "+Parse.User.current().id+
+                        //   " added card with URL "+url+" and description \""+description+"\""+"and ID "+newCard.id);
                     },
-                    error: function(collection, error) {
+                    error: function(error) {
                         console.log(error);
                     }
                 });
-                this.cancel();
-                this.trigger("createSuccess");
+                //this.cancel();
                 return false;
 
             },
 
             render: function() {
                 //this.$el.append(_.template($("#signup-template").html()));
+                this.$el.empty();
                 this.$el.append(_.template( CreateTemplate ));
                 this.$el.find(".modal").openModal();
                 this.delegateEvents();

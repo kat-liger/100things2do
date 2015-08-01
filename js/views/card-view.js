@@ -38,7 +38,6 @@ define(
                     this.$el.find('#confirm-modal').openModal();
                     var that = this;
                     $(".confirm-button").click(function () {
-                        console.log( "Card with ID "+that.model.id+" will be removed" );
                         $('#confirm-modal').closeModal();
                         that.model.destroy();
                         that.trigger("destroySuccess");

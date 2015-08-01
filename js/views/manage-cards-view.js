@@ -69,8 +69,9 @@ define(
 
                 var that = this;
                 cardView.on("destroySuccess",function() {
-                    that.render();
+                    that.showAuthored();
                 });
+
             },
 
             showAll: function() {
@@ -96,17 +97,22 @@ define(
                     }
                 }, this);
                 this.render(myCardsCollection);
+                if (myCardsCollection.length === 0) {this.$el.find("#cards").append("<div class='center'><h4>You didn't add any cards yet</h4></div>");}
                 $(".remove-card").removeClass("white-text no-cursor");
 
             },
 
             createCard: function() {
-                var createView = new CreateView;
+                var createView = new CreateView();
                 var that = this;
-                createView.on("createSuccess",function() {
-                    console.log("we are inside listener function");
-                    that.showAll();
+                createView.on("createSuccess",function(newCard) {
+                    that.collection.add(newCard);
+
+                    createView.remove();
+
+                    that.showAuthored();
                 });
+
 
             },
 
