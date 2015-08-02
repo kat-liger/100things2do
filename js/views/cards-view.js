@@ -1,6 +1,7 @@
 define(
     ['jquery','lodash','parse','models/card-collection','views/card-view'],
     function($,_,Parse,Cards,CardView) {
+        "use strict";
 
         var CardsView = Parse.View.extend({
             el: $("#cards"),

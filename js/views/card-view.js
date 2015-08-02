@@ -3,6 +3,7 @@ define(
     ['jquery', 'lodash', 'parse', 'text!templates/card-template.html', 'text!templates/confirm-removal.html'],
 
     function($, _, Parse, CardTemplate, ConfirmTemplate) {
+        "use strict";
 
         var CardView = Parse.View.extend({
             //tagName: "article",

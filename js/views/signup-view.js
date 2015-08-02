@@ -1,9 +1,9 @@
 define(
 
-    ['jquery', 'lodash', 'parse', 'views/cards-view','views/manage-cards-view','text!templates/signup-template.html'],
+    ['jquery', 'lodash', 'parse', 'text!templates/signup-template.html'],
 
-    function($,_,Parse,CardsView, ManageCardsView, SignupTemplate) {
-
+    function($, _, Parse, SignupTemplate) {
+        "use strict";
         var SignupView = Parse.View.extend({
 
             el: "#cards",
@@ -30,7 +30,7 @@ define(
                         self.cancel();
                         self.trigger("signupSuccess");
                         self.undelegateEvents();
-                        delete self;
+                        //delete self;
                     },
 
                     error: function(user, error) {

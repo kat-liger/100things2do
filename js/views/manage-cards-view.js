@@ -1,14 +1,18 @@
-define(
+define (
     ['jquery','lodash','parse','models/card-collection','views/card-view',
-        'views/cards-view', 'text!templates/filters-template.html', 'views/create-view'],
+        'text!templates/filters-template.html', 'views/create-view'],
     function($,_,Parse,Cards,CardView,
-             CardsView, FiltersTemplate, CreateView) {
+             FiltersTemplate, CreateView) {
 
-
+        "use strict";
 
         var ManageCardsView = Parse.View.extend({
             el: $(".section"),
+            myCardsCollection: null,
             likedCardsCollection: null,
+            collection: null,
+            isLikedView: false,
+            isAuthoredView:false,
 
             events: {
 
@@ -21,6 +25,12 @@ define(
             },
 
             initialize: function () {
+                // adding the tabs
+                this.$el.prepend(_.template(FiltersTemplate));
+                // initializing the tabs
+                $(document).ready(function(){
+                    $('ul.tabs').tabs();
+                });
 
                 this.collection = new Cards();
                 this.collection.query = new Parse.Query("Cards");
@@ -33,10 +43,28 @@ define(
                     }
                 });
 
-                this.$el.append("<div class='fixed-action-btn' style='bottom: 45px; right: 24px;'><a class='create-card btn-floating btn-large red'><i class='material-icons'>add</i></a></div>");
-               //this.collection.on('remove', this.render(this.collection));
+                this.$el.append("<div class='fixed-action-btn' style='bottom: 45px; right: 24px;'><a class='create-card btn-floating btn-large red'>"+
+                    "<i class='material-icons'>add</i></a></div>");
 
+            },
 
+            onReady : function () {
+                var that = this;
+
+                this.likedCardsCollection.on('remove', function () {
+                    if (that.isLikedView) {
+                        that.showLiked();
+                    }
+                    if (that.isAuthoredView) {
+                        that.showAuthored();
+                    }
+                });
+
+                this.likedCardsCollection.on('add', function () {
+                    if (that.isAuthoredView) {
+                        that.showAuthored();
+                    }
+                });
             },
 
             render: function (collection) {
@@ -44,7 +72,7 @@ define(
                 this.$el.find("#cards").empty();
 
                 //adding the tabs
-                this.$el.prepend(_.template(FiltersTemplate));
+                //this.$el.prepend(_.template(FiltersTemplate));
                 var that = this;
                 var count = 0;
                 _.each(collection.models, function (item) {
@@ -68,7 +96,7 @@ define(
                 this.$el.find("#cards").append(cardView.render().el);
 
                 var that = this;
-                cardView.on("destroySuccess",function() {
+                cardView.on("destroySuccess", function() {
                     that.showAuthored();
                 });
 
@@ -76,29 +104,36 @@ define(
 
             showAll: function() {
                 //emptying container
-                this.$el.find(".filters").remove();
+                //this.$el.find(".filters").remove();
+                this.isLikedView = false;
+                this.isAuthoredView = false;
                 this.render(this.collection);
             },
 
             showLiked: function() {
                 //emptying container
-                this.$el.find(".filters").remove();
+                //this.$el.find(".filters").remove();
+                this.isLikedView = true;
+                this.isAuthoredView = false;
                 this.render(this.likedCardsCollection);
             },
 
             showAuthored: function() {
+                var that = this;
+                this.isAuthoredView = true;
                 //emptying container
-                this.$el.find(".filters").remove();
+                //this.$el.find(".filters").remove();
                 //create collection with cards created by this user
-                var myCardsCollection = new Cards();
+                that.myCardsCollection = new Cards();
                 _.each(this.collection.models, function (item) {
                     if (item.get("author") === Parse.User.current().get("username")) {
-                        myCardsCollection.add(item);
+                        that.myCardsCollection.add(item);
                     }
                 }, this);
-                this.render(myCardsCollection);
-                if (myCardsCollection.length === 0) {this.$el.find("#cards").append("<div class='center'><h4>You didn't add any cards yet</h4></div>");}
-                $(".remove-card").removeClass("white-text no-cursor");
+                this.isLikedView = false;
+                this.render(that.myCardsCollection);
+                if (that.myCardsCollection.length === 0) {this.$el.find("#cards").append("<div class='center no-posts'><h4>You didn't add any cards yet</h4></div>");}
+                $(".remove-card").removeClass("remove-link");
 
             },
 
@@ -130,6 +165,8 @@ define(
                            var likedCard = cardsCollection.get(item.get("cardId"));
                            that.likedCardsCollection.add(likedCard);
                         });
+
+                        that.onReady();
                     },
                     error: function(error) {
                         console.log("Error: " + error.code + " " + error.message);
@@ -140,9 +177,11 @@ define(
 
             filterByAuthor: function(e) {
                 e.preventDefault();
+                this.isLikedView = false;
+                this.isAuthoredView = false;
                 var cardAuthor = $(e.target).text();
                 //emptying container
-                this.$el.find(".filters").remove();
+                //this.$el.find(".filters").remove();
                 //create collection with cards created by this user
                 var myCardsCollection = new Cards();
                 _.each(this.collection.models, function (item) {

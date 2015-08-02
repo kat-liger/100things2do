@@ -41,9 +41,9 @@ body {
 }
 
 .container {
-    min-height: 81vh;
-    /* equal to footer height
-    margin-bottom: -50px;*/
+    min-height: 92vh;
+    /* equal to footer height*/
+    margin-bottom: -50px;
 }
 
 .container:after {
@@ -108,7 +108,8 @@ footer.page-footer {
 #login-card h2, #login-card a,
 #signup-card h4, #login-card h4,
 #create-card h2, #create-card a,
-#confirm-modal h5, #confirm-modal h4, #confirm-modal a {
+#confirm-modal h5, #confirm-modal h4, #confirm-modal a,
+.no-posts h4 {
     color: teal;
 }
 
@@ -153,6 +154,6 @@ nav ul li.user-info:hover, nav ul li.user-info.active {
    background-color: #4db6ac;
 }
 
-a.no-cursor {
-    cursor: default;
+a.remove-link {
+    display: none;
 }

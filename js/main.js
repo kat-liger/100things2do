@@ -1,11 +1,13 @@
-require(
-    ['jquery', 'lodash', 'json2', 'parse', 'materialize', 'views/card-view', 'views/cards-view',
-        'models/card-collection', 'models/card-model','views/signup-view','views/login-view',
+require (
+    ['jquery', 'lodash', 'json2', 'parse', 'materialize', 'views/cards-view',
+        'views/signup-view','views/login-view',
         'views/manage-cards-view', 'text!templates/userinfo-template.html','text!templates/loginsignup-template.html'],
-    function($, _, json2, Parse, Materialize, CardView, CardsView,
-         Cards, Card, SignupView, LoginView,
+
+    function($, _, json2, Parse, Materialize, CardsView,
+         SignupView, LoginView,
          ManageCardsView, UserinfoTemplate, LoginSignupTemplate) {
 
+        'use strict';
         //Parse.$ = $;
         Parse.initialize("5jqnBuG8MWb2et9PNWXmTPE3gqVJeRdfVpQrf4JL", "kvJEstj10MpNCKVQUCPs2ftMZJ2x7zLhX6VLZ0GY");
 
@@ -23,7 +25,8 @@ require(
                 'click .signup-trigger': 'signUp',
                 'click .login-trigger': 'login',
                 'click .log-out': 'logOut',
-                'click a.like': 'like'
+                'click a.like': 'like',
+                'click a.brand-logo': 'home'
 
             },
 
@@ -40,9 +43,18 @@ require(
 
                 } else {
 
-                    //this.$('.hide-on-med-and-down').html(_.template( LoginSignupTemplate ));
-                    var cardsView = new CardsView;
+                    var cardsView = new CardsView();
                 }
+            },
+
+            home: function() {
+
+                    if (Parse.User.current()) {
+
+                        this.manageCardsView.showAll();
+
+                    }
+
             },
 
             signUp: function() {
@@ -82,9 +94,6 @@ require(
                 this.$el.find(".fixed-action-btn").remove();
                 this.$el.find("#cards").empty();
                 this.$('.hide-on-med-and-down').html(_.template( LoginSignupTemplate ));
-
-                //this.undelegateEvents();
-                // delete this;
                 this.render();
             },
 
@@ -125,8 +134,8 @@ require(
                 //console.log("user with ID "+Parse.User.current().id+" liked the card with ID "+cardId);
                 likes.save({
                     cardId: cardId,
-                    userId: Parse.User.current().id,
-                    ACL: new Parse.ACL(Parse.User.current())
+                    userId: Parse.User.current().id
+                    //ACL: new Parse.ACL(Parse.User.current())
                 }).then(function () {
                     //console.log("user with ID"+Parse.User.current().id+" liked the card with ID"+cardId);
                     //if the like was saved then increase the liked attribute of the card in Cards table
@@ -134,7 +143,14 @@ require(
                     //cardQuery.equalTo("objectId", cardId);
                     var thisCard = scope.manageCardsView.collection.get(cardId);
                     thisCard.increment("liked", 1);
-                    thisCard.save();
+                    thisCard.save(null, {
+                        success: function(newCard) {
+                            //adding this card to likedCardsCollection as well
+                            scope.manageCardsView.likedCardsCollection.add(newCard);
+                        }
+                    });
+                    //adding this card to likedCardsCollection as well
+                    //scope.manageCardsView.likedCardsCollection.add(thisCard);
                 });
             },
 
@@ -142,7 +158,14 @@ require(
                 //console.log("user with ID "+Parse.User.current().id+" unliked the card with ID "+cardId);
                 var thisCard = scope.manageCardsView.collection.get(cardId);
                 thisCard.increment("liked", -1);
-                thisCard.save();
+                thisCard.save(null, {
+                    success: function (newCard) {
+                        //removing this card from likedCardsCollection as well
+                        scope.manageCardsView.likedCardsCollection.remove(newCard);
+                    }
+                });
+                //removing this card from likedCardsCollection as well
+                //scope.manageCardsView.likedCardsCollection.remove(thisCard);
             }
 
         });
@@ -156,40 +179,10 @@ require(
 
         var state = new AppState();
 
-        var AppRouter = Parse.Router.extend({
-            routes: {
-                "": "index",
-                "all": "all",
-                "authored": "authored",
-                "liked": "liked"
-            },
-
-            initialize: function(options) {
-            },
-
-            all: function() {
-                //state.set({ filter: "all" })
-                console.log("you navigated to all");
-            },
-
-            authored: function() {
-                //state.set({ filter: "authored" });
-            },
-
-            liked: function() {
-                //state.set({ filter: "liked" });
-            }
-        });
-
-
-
-        new AppRouter();
-
 
         //create instance of master view
         var appView = new AppView();
 
-        Parse.history.start({pushState: true});
 
         return appView;
 
