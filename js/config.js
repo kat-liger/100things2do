@@ -22,7 +22,7 @@ require.config({
 
     shim: {
         parse: { deps: ['lodash', 'jquery'], exports: 'Parse'},
-        materialize: { deps: ['jquery', 'hammerjs'] },
+        materialize: { deps: ['jquery', 'hammerjs', 'jquery.hammer'] },
         'jquery.hammer': { deps: ['jquery', 'hammerjs', 'waves'] },
         'sideNav': ['jquery','velocity', 'hammerjs'],
         'waves': { exports: 'Waves' }
