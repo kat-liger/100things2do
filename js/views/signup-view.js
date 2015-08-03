@@ -54,7 +54,6 @@ define(
             //function to go back to Home Page
             cancel: function() {
                 this.$el.find(".modal").closeModal();
-                this.$el.find(".modal").remove();
             },
 
             //function to signup on Enter
