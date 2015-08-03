@@ -33,6 +33,12 @@ require (
             initialize: function() {
                 this.render();
 
+                $('.button-collapse').sideNav({
+                        menuWidth: 200,
+                        closeOnClick: true // Closes side-nav on <a> clicks
+                    }
+                );
+
             },
 
             render: function() {

@@ -97,11 +97,11 @@ footer.page-footer {
     padding-right: 20px;
     padding-bottom: 20px;
     margin: auto;
-    width: 500px;
+
 }
 
 .modal {
-    width: 500px;
+ width: 500px;
 }
 
 #signup-card h2, #signup-card a,
@@ -110,50 +110,65 @@ footer.page-footer {
 #create-card h2, #create-card a,
 #confirm-modal h5, #confirm-modal h4, #confirm-modal a,
 .no-posts h4 {
-    color: teal;
+ color: teal;
 }
 
 #signup-card input, #login-card input, #create-card input, #create-card textarea {
-    color: black;
-    font-size: larger;
+ color: black;
+ font-size: larger;
 }
 
 
 nav ul a {
-    display: inline;
+ display: inline;
 }
 
 .filters .tabs .tab a {
-    background-color: #fafafa;
+ background-color: #fafafa;
 }
 
 a.log-out:hover {
-    color: #ee6e73;
+ color: #ee6e73;
 }
 
 span.username {
-    color: #f9c9cb;
-    font-weight: bold;
+ color: #f9c9cb;
+ font-weight: bold;
 }
 
- span.like {
-     font-size: 24px;
-     display: inline;
-     margin-right: 10px;
-     color: cadetblue;
-     line-height: 1;
-     box-sizing: inherit;
-     vertical-align: top;
-  }
+span.like {
+  font-size: 24px;
+  display: inline;
+  margin-right: 10px;
+  color: cadetblue;
+  line-height: 1;
+  box-sizing: inherit;
+  vertical-align: top;
+}
 
 .card .card-action a {
-    margin-right: 0px;
+ margin-right: 0px;
 }
 
 nav ul li.user-info:hover, nav ul li.user-info.active {
-   background-color: #4db6ac;
+background-color: #4db6ac;
 }
 
 a.remove-link {
-    display: none;
+ display: none;
+}
+
+nav ul.side-nav {
+ width: 50%;
+ background-color: white;
+}
+
+@media only screen and (max-width : 992px) {
+ .modal {
+     transform: scaleX(0.9);
+     width: 300px;
+ }
+ a.brand-logo {
+     font-size: medium;
+ }
 }
