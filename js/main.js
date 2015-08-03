@@ -26,19 +26,24 @@ require (
                 'click .login-trigger': 'login',
                 'click .log-out': 'logOut',
                 'click a.like': 'like',
-                'click a.brand-logo': 'home'
+                'click a.brand-logo': 'home',
+                'click a.button-collapse': 'sideNavInit'
 
             },
 
             initialize: function() {
+
                 this.render();
+
+            },
+
+            sideNavInit: function() {
 
                 $('.button-collapse').sideNav({
                         menuWidth: 200,
                         closeOnClick: true // Closes side-nav on <a> clicks
                     }
                 );
-
             },
 
             render: function() {
