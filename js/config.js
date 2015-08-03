@@ -12,16 +12,20 @@ require.config({
         json2: 'libs/json2',
         text: 'libs/text',
         hammerjs: 'libs/hammer.min',
-        'jquery.hammer': 'jquery.hammer',
-        waves: 'waves.min',
-        materialize: 'libs/materialize.min'
+        waves: 'libs/waves.min',
+        materialize: 'libs/materialize.min',
+        'velocity': 'libs/velocity.min',
+        'jquery.hammer': 'libs/jquery.hammer'
+
 
     },
 
     shim: {
         parse: { deps: ['lodash', 'jquery'], exports: 'Parse'},
         materialize: { deps: ['jquery', 'hammerjs'] },
-        'jquery.hammer': { deps: ['jquery', 'hammerjs', 'waves'] }
+        'jquery.hammer': { deps: ['jquery', 'hammerjs', 'waves'] },
+        'sideNav': ['jquery','velocity', 'hammerjs'],
+        'waves': { exports: 'Waves' }
     }
 
 });
