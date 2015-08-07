@@ -16,10 +16,10 @@ require (
 
         // The main view for the app
         var AppView = Parse.View.extend({
-            // Instead of generating a new element, bind to the existing skeleton of
-            // the App already present in the HTML.
+
             el: "body",
             manageCardsView: null,
+            isLikeInProgress: false,
 
             events: {
                 'click .signup-trigger': 'signUp',
@@ -106,6 +106,12 @@ require (
             updateLike: function(cardId) {
                 var that = this;
 
+                if (this.isLikeInProgress === true) {
+                    return;
+                }
+
+                this.isLikeInProgress = true;
+
                 var Likes = Parse.Object.extend("Likes");
                 var likes = new Likes();
                 //we need to check collection for the row where cardId = cardId and userId = Parse.User.current().id
@@ -122,9 +128,11 @@ require (
                                 result.destroy();
                             });
                             that.removeLike(likes, cardId, that);
+                            that.isLikeInProgress = false;
                         } else {
                             //add row to Likes
                             that.addLike(likes,cardId,that);
+                            that.isLikeInProgress = false;
                         }
 
                     },
@@ -136,17 +144,11 @@ require (
             },
 
             addLike: function(likes, cardId, scope) {
-
-                //console.log("user with ID "+Parse.User.current().id+" liked the card with ID "+cardId);
                 likes.save({
                     cardId: cardId,
                     userId: Parse.User.current().id
                     //ACL: new Parse.ACL(Parse.User.current())
                 }).then(function () {
-                    //console.log("user with ID"+Parse.User.current().id+" liked the card with ID"+cardId);
-                    //if the like was saved then increase the liked attribute of the card in Cards table
-                    //var cardQuery = new Parse.Query("Cards");
-                    //cardQuery.equalTo("objectId", cardId);
                     var thisCard = scope.manageCardsView.collection.get(cardId);
                     thisCard.increment("liked", 1);
                     thisCard.save(null, {
@@ -155,13 +157,10 @@ require (
                             scope.manageCardsView.likedCardsCollection.add(newCard);
                         }
                     });
-                    //adding this card to likedCardsCollection as well
-                    //scope.manageCardsView.likedCardsCollection.add(thisCard);
                 });
             },
 
             removeLike: function(likes, cardId, scope) {
-                //console.log("user with ID "+Parse.User.current().id+" unliked the card with ID "+cardId);
                 var thisCard = scope.manageCardsView.collection.get(cardId);
                 thisCard.increment("liked", -1);
                 thisCard.save(null, {
@@ -170,8 +169,6 @@ require (
                         scope.manageCardsView.likedCardsCollection.remove(newCard);
                     }
                 });
-                //removing this card from likedCardsCollection as well
-                //scope.manageCardsView.likedCardsCollection.remove(thisCard);
             }
 
         });

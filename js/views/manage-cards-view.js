@@ -71,8 +71,6 @@ define (
                 //emptying container
                 this.$el.find("#cards").empty();
 
-                //adding the tabs
-                //this.$el.prepend(_.template(FiltersTemplate));
                 var that = this;
                 var count = 0;
                 _.each(collection.models, function (item) {
@@ -104,7 +102,6 @@ define (
 
             showAll: function() {
                 //emptying container
-                //this.$el.find(".filters").remove();
                 this.isLikedView = false;
                 this.isAuthoredView = false;
                 this.render(this.collection);
@@ -112,17 +109,17 @@ define (
 
             showLiked: function() {
                 //emptying container
-                //this.$el.find(".filters").remove();
                 this.isLikedView = true;
                 this.isAuthoredView = false;
                 this.render(this.likedCardsCollection);
+                if (this.likedCardsCollection.length === 0) {
+                    this.$el.find("#cards").append("<div class='center no-posts'><h4>You didn't like any cards yet</h4></div>");
+                }
             },
 
             showAuthored: function() {
                 var that = this;
                 this.isAuthoredView = true;
-                //emptying container
-                //this.$el.find(".filters").remove();
                 //create collection with cards created by this user
                 that.myCardsCollection = new Cards();
                 _.each(this.collection.models, function (item) {
@@ -132,7 +129,9 @@ define (
                 }, this);
                 this.isLikedView = false;
                 this.render(that.myCardsCollection);
-                if (that.myCardsCollection.length === 0) {this.$el.find("#cards").append("<div class='center no-posts'><h4>You didn't add any cards yet</h4></div>");}
+                if (that.myCardsCollection.length === 0) {
+                    this.$el.find("#cards").append("<div class='center no-posts'><h4>You didn't add any cards yet</h4></div>");
+                }
                 $(".remove-card").removeClass("remove-link");
 
             },
@@ -180,8 +179,6 @@ define (
                 this.isLikedView = false;
                 this.isAuthoredView = false;
                 var cardAuthor = $(e.target).text();
-                //emptying container
-                //this.$el.find(".filters").remove();
                 //create collection with cards created by this user
                 var myCardsCollection = new Cards();
                 _.each(this.collection.models, function (item) {

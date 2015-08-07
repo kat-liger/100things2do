@@ -6,7 +6,8 @@ define(
         "use strict";
         var LoginView = Parse.View.extend({
 
-            el: "#cards",
+            el: ".modal-container",
+            isLoginInProgress: false,
 
             events: {
                 'click .cancel-button': 'cancel',
@@ -21,6 +22,13 @@ define(
             },
 
             logIn: function(e) {
+
+                if (this.isLoginInProgress === true) {
+                    return;
+                }
+
+                this.isLoginInProgress = true;
+
                 var self = this;
                 var username = this.$("#login-username").val();
                 var password = this.$("#login-password").val();
@@ -31,7 +39,7 @@ define(
                         self.cancel();
                         self.trigger("loginSuccess");
                         self.undelegateEvents();
-                       // delete self;
+                        self.isLoginInProgress = false;
 
                     },
 
@@ -48,7 +56,7 @@ define(
 
             render: function() {
                //this.$el.append(_.template($("#login-template").html()));
-               this.$el.append(_.template( LoginTemplate ));
+               this.$el.html(_.template( LoginTemplate ));
                this.$el.find(".modal").openModal();
                this.delegateEvents();
             },
@@ -56,7 +64,7 @@ define(
             //function to go back to Home Page
             cancel: function() {
                 this.$el.find(".modal").closeModal();
-                this.$el.find(".modal").remove();
+                //this.$el.find(".modal").remove();
             },
 
             //function to logIn on Enter
